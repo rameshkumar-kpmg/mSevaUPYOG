@@ -78,7 +78,7 @@ public class UnmaskingUtil {
 		
 		for (OwnerInfo ownerInfo : property.getOwners()) {
 			
-			String currentOwnerId = ownerInfo.getUuid();
+			String currentOwnerId = null;//ownerInfo.getUuid();
 			if(currentOwnerId == null)
 				continue;
 			
@@ -105,25 +105,25 @@ public class UnmaskingUtil {
 		if (!StringUtils.isEmpty(ownerInfo.getFatherOrHusbandName()) && ownerInfo.getFatherOrHusbandName().contains("*")) {
 			ownerInfo.setFatherOrHusbandName(unmaskedUser.getFatherOrHusbandName());
 		}
-		if (ownerInfo.getMobileNumber().contains("*")) {
-			ownerInfo.setMobileNumber(unmaskedUser.getMobileNumber());
-		}
-		
-		if (ownerInfo.getPermanentAddress() != null 
-				&& ownerInfo.getPermanentAddress().contains("*")) {
-			ownerInfo.setPermanentAddress(unmaskedUser.getPermanentAddress());
-		}
-		
-		if (ownerInfo.getCorrespondenceAddress() != null 
-				&& ownerInfo.getCorrespondenceAddress().contains("*")) {
-			ownerInfo.setCorrespondenceAddress(unmaskedUser.getCorrespondenceAddress());
-		}
-		if (!StringUtils.isEmpty(ownerInfo.getUserName()) && ownerInfo.getUserName().contains("*")) {
-			ownerInfo.setUserName(unmaskedUser.getUserName());
-		}
-		if (!StringUtils.isEmpty(ownerInfo.getName()) &&  ownerInfo.getName().contains("*")) {
-			ownerInfo.setName(unmaskedUser.getName());
-		}
+//		if (ownerInfo.getMobileNumber().contains("*")) {
+//			ownerInfo.setMobileNumber(unmaskedUser.getMobileNumber());
+//		}
+//		
+//		if (ownerInfo.getPermanentAddress() != null 
+//				&& ownerInfo.getPermanentAddress().contains("*")) {
+//			ownerInfo.setPermanentAddress(unmaskedUser.getPermanentAddress());
+//		}
+//		
+//		if (ownerInfo.getCorrespondenceAddress() != null 
+//				&& ownerInfo.getCorrespondenceAddress().contains("*")) {
+//			ownerInfo.setCorrespondenceAddress(unmaskedUser.getCorrespondenceAddress());
+//		}
+//		if (!StringUtils.isEmpty(ownerInfo.getUserName()) && ownerInfo.getUserName().contains("*")) {
+//			ownerInfo.setUserName(unmaskedUser.getUserName());
+//		}
+//		if (!StringUtils.isEmpty(ownerInfo.getName()) &&  ownerInfo.getName().contains("*")) {
+//			ownerInfo.setName(unmaskedUser.getName());
+//		}
 		if (!StringUtils.isEmpty(ownerInfo.getGender()) && ownerInfo.getGender().contains("*")) {
 			ownerInfo.setGender(unmaskedUser.getGender());
 		}

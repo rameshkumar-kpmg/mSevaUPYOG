@@ -290,11 +290,11 @@ public class NotificationService {
 		List<String> configuredChannelNames =  notifUtil.fetchChannelList(new RequestInfo(), tenantId, moduleName, action);
 		Set<String> mobileNumbers = new HashSet<>();
 
-		property.getOwners().forEach(owner -> {
-			if (owner.getMobileNumber() != null)
-				mobileNumberToOwner.put(owner.getMobileNumber(), owner.getName());
-			    mobileNumbers.add(owner.getMobileNumber());
-		});
+//		property.getOwners().forEach(owner -> {
+//			if (owner.getMobileNumber() != null)
+//				mobileNumberToOwner.put(owner.getMobileNumber(), owner.getName());
+//			    mobileNumbers.add(owner.getMobileNumber());
+//		});
 
 log.info("mobileNumbers sms: "+mobileNumbers);
 log.info("property.getOwners() sms: "+property.getOwners().toString());
@@ -393,37 +393,37 @@ List<SMSRequest> smsRequests = notifUtil.createSMSRequest(msg, mobileNumberToOwn
 		List<String> configuredChannelNames =  notifUtil.fetchChannelList(requestInfo, request.getProperty().getTenantId(), PTConstants.PT_BUSINESSSERVICE, ACTION_UPDATE_MOBILE);
 		Set<String> mobileNumbers = new HashSet<>();
 
-		property.getOwners().forEach(owner -> {
-
-			if(uuidToMobileNumber.containsKey(owner.getUuid()) && uuidToMobileNumber.get(owner.getUuid())!=owner.getMobileNumber()) {
-				
-				String customizedMsg = msg.replace(PT_OWNER_NAME,owner.getName()).replace(PT_OLD_MOBILENUMBER, uuidToMobileNumber.get(owner.getUuid())).replace(PT_NEW_MOBILENUMBER, owner.getMobileNumber());
-				Map<String, String> mobileNumberToOwner = new HashMap<>();
-				
-				mobileNumberToOwner.put(uuidToMobileNumber.get(owner.getUuid()), owner.getName());
-				mobileNumberToOwner.put(owner.getMobileNumber(),owner.getName());
-				mobileNumbers.add(uuidToMobileNumber.get(owner.getUuid()));
-				mobileNumbers.add(owner.getMobileNumber());
-
-				if(configuredChannelNames.contains(CHANNEL_NAME_SMS)) {
-					List<SMSRequest> smsRequests = notifUtil.createSMSRequest(customizedMsg, mobileNumberToOwner);
-					notifUtil.sendSMS(smsRequests);
-				}
-
-				if(configuredChannelNames.contains(CHANNEL_NAME_EVENT)) {
-					Boolean isActionReq = true;
-					List<SMSRequest> smsRequests = notifUtil.createSMSRequest(customizedMsg, mobileNumberToOwner);
-					List<Event> events = notifUtil.enrichEvent(smsRequests, requestInfo, property.getTenantId(), property, isActionReq);
-					notifUtil.sendEventNotification(new EventRequest(requestInfo, events));
-				}
-
-				if(configuredChannelNames.contains(CHANNEL_NAME_EMAIL)) {
-					Map<String, String> mapOfPhnoAndEmail = notifUtil.fetchUserEmailIds(mobileNumbers, requestInfo, request.getProperty().getTenantId());
-					List<EmailRequest> emailRequests = notifUtil.createEmailRequest(requestInfo, customizedMsg, mapOfPhnoAndEmail);
-					notifUtil.sendEmail(emailRequests);
-				}
-				}
-		});
+//		property.getOwners().forEach(owner -> {
+//
+//			if(uuidToMobileNumber.containsKey(owner.getUuid()) && uuidToMobileNumber.get(owner.getUuid())!=owner.getMobileNumber()) {
+//				
+//				String customizedMsg = msg.replace(PT_OWNER_NAME,owner.getName()).replace(PT_OLD_MOBILENUMBER, uuidToMobileNumber.get(owner.getUuid())).replace(PT_NEW_MOBILENUMBER, owner.getMobileNumber());
+//				Map<String, String> mobileNumberToOwner = new HashMap<>();
+//				
+//				mobileNumberToOwner.put(uuidToMobileNumber.get(owner.getUuid()), owner.getName());
+//				mobileNumberToOwner.put(owner.getMobileNumber(),owner.getName());
+//				mobileNumbers.add(uuidToMobileNumber.get(owner.getUuid()));
+//				mobileNumbers.add(owner.getMobileNumber());
+//
+//				if(configuredChannelNames.contains(CHANNEL_NAME_SMS)) {
+//					List<SMSRequest> smsRequests = notifUtil.createSMSRequest(customizedMsg, mobileNumberToOwner);
+//					notifUtil.sendSMS(smsRequests);
+//				}
+//
+//				if(configuredChannelNames.contains(CHANNEL_NAME_EVENT)) {
+//					Boolean isActionReq = true;
+//					List<SMSRequest> smsRequests = notifUtil.createSMSRequest(customizedMsg, mobileNumberToOwner);
+//					List<Event> events = notifUtil.enrichEvent(smsRequests, requestInfo, property.getTenantId(), property, isActionReq);
+//					notifUtil.sendEventNotification(new EventRequest(requestInfo, events));
+//				}
+//
+//				if(configuredChannelNames.contains(CHANNEL_NAME_EMAIL)) {
+//					Map<String, String> mapOfPhnoAndEmail = notifUtil.fetchUserEmailIds(mobileNumbers, requestInfo, request.getProperty().getTenantId());
+//					List<EmailRequest> emailRequests = notifUtil.createEmailRequest(requestInfo, customizedMsg, mapOfPhnoAndEmail);
+//					notifUtil.sendEmail(emailRequests);
+//				}
+//				}
+//		});
 		
 	}
 
@@ -448,34 +448,34 @@ List<SMSRequest> smsRequests = notifUtil.createSMSRequest(msg, mobileNumberToOwn
 		List<String> configuredChannelNames =  notifUtil.fetchChannelList(request.getRequestInfo(), request.getProperty().getTenantId(), PTConstants.PT_BUSINESSSERVICE, PTConstants.ACTION_ALTERNATE_MOBILE);
 		Set<String> mobileNumbers = new HashSet<>();
 
-		property.getOwners().forEach(owner -> {
-
-			if(owner.getAlternatemobilenumber()!=null && !uuidToAlternateMobileNumber.get(owner.getUuid()).equalsIgnoreCase(owner.getAlternatemobilenumber()) ) {	
-				String customizedMsgForApp = msg.replace(PT_OWNER_NAME,owner.getName()).replace(PT_ALTERNATE_NUMBER, owner.getAlternatemobilenumber());
-				String customizedMsg =  customizedMsgForApp.replace(VIEW_PROPERTY_CODE,"");
-				Map<String, String> mobileNumberToOwner = new HashMap<>();
-				mobileNumberToOwner.put(owner.getMobileNumber(), owner.getName());
-				mobileNumbers.add(owner.getMobileNumber());
-
-				if(configuredChannelNames.contains(CHANNEL_NAME_SMS)) {
-					List<SMSRequest> smsRequests = notifUtil.createSMSRequest(customizedMsg, mobileNumberToOwner);
-					notifUtil.sendSMS(smsRequests);
-				}
-
-				if(configuredChannelNames.contains(CHANNEL_NAME_EVENT)) {
-					Boolean isActionReq = true;
-					List<SMSRequest> smsRequests = notifUtil.createSMSRequest(customizedMsgForApp, mobileNumberToOwner);
-					List<Event> events = notifUtil.enrichEvent(smsRequests, requestInfo, property.getTenantId(), property, isActionReq);
-					notifUtil.sendEventNotification(new EventRequest(requestInfo, events));
-				}
-
-				if(configuredChannelNames.contains(CHANNEL_NAME_EMAIL)) {
-					Map<String, String> mapOfPhnoAndEmail = notifUtil.fetchUserEmailIds(mobileNumbers, requestInfo, request.getProperty().getTenantId());
-					List<EmailRequest> emailRequests = notifUtil.createEmailRequest(requestInfo, customizedMsg, mapOfPhnoAndEmail);
-				 	notifUtil.sendEmail(emailRequests);
-				}
-			}
-		});
+//		property.getOwners().forEach(owner -> {
+//
+//			if(owner.getAlternatemobilenumber()!=null && !uuidToAlternateMobileNumber.get(owner.getUuid()).equalsIgnoreCase(owner.getAlternatemobilenumber()) ) {	
+//				String customizedMsgForApp = msg.replace(PT_OWNER_NAME,owner.getName()).replace(PT_ALTERNATE_NUMBER, owner.getAlternatemobilenumber());
+//				String customizedMsg =  customizedMsgForApp.replace(VIEW_PROPERTY_CODE,"");
+//				Map<String, String> mobileNumberToOwner = new HashMap<>();
+//				mobileNumberToOwner.put(owner.getMobileNumber(), owner.getName());
+//				mobileNumbers.add(owner.getMobileNumber());
+//
+//				if(configuredChannelNames.contains(CHANNEL_NAME_SMS)) {
+//					List<SMSRequest> smsRequests = notifUtil.createSMSRequest(customizedMsg, mobileNumberToOwner);
+//					notifUtil.sendSMS(smsRequests);
+//				}
+//
+//				if(configuredChannelNames.contains(CHANNEL_NAME_EVENT)) {
+//					Boolean isActionReq = true;
+//					List<SMSRequest> smsRequests = notifUtil.createSMSRequest(customizedMsgForApp, mobileNumberToOwner);
+//					List<Event> events = notifUtil.enrichEvent(smsRequests, requestInfo, property.getTenantId(), property, isActionReq);
+//					notifUtil.sendEventNotification(new EventRequest(requestInfo, events));
+//				}
+//
+//				if(configuredChannelNames.contains(CHANNEL_NAME_EMAIL)) {
+//					Map<String, String> mapOfPhnoAndEmail = notifUtil.fetchUserEmailIds(mobileNumbers, requestInfo, request.getProperty().getTenantId());
+//					List<EmailRequest> emailRequests = notifUtil.createEmailRequest(requestInfo, customizedMsg, mapOfPhnoAndEmail);
+//				 	notifUtil.sendEmail(emailRequests);
+//				}
+//			}
+//		});
 		
 		
 	}
@@ -495,10 +495,10 @@ List<SMSRequest> smsRequests = notifUtil.createSMSRequest(msg, mobileNumberToOwn
 		String citizenFeedackMessage = notifUtil.getMsgForCitizenFeedbackNotification(property, localizationMsgs, serviceType);
 		Map<String, String> mobileNumberToOwner = new HashMap<>();
 
-		property.getOwners().forEach(owner -> {
-			if (owner.getMobileNumber() != null)
-				mobileNumberToOwner.put(owner.getMobileNumber(), owner.getName());
-		});
+//		property.getOwners().forEach(owner -> {
+//			if (owner.getMobileNumber() != null)
+//				mobileNumberToOwner.put(owner.getMobileNumber(), owner.getName());
+//		});
 
 		List<SMSRequest> smsRequests = notifUtil.createSMSRequest(citizenFeedackMessage, mobileNumberToOwner);
 		notifUtil.sendSMS(smsRequests);

@@ -72,25 +72,25 @@ public class UserService {
 		for (OwnerInfo ownerFromRequest : owners) {
 
 			addUserDefaultFields(property.getTenantId(), role, ownerFromRequest);
-			UserDetailResponse userDetailResponse = userExists(ownerFromRequest, requestInfo);
+			UserDetailResponse userDetailResponse = null;//userExists(ownerFromRequest, requestInfo);
 			List<OwnerInfo> existingUsersFromService = userDetailResponse.getUser();
-			Map<String, OwnerInfo> ownerMapFromSearch = existingUsersFromService.stream().collect(Collectors.toMap(OwnerInfo::getUuid, Function.identity()));
+//			Map<String, OwnerInfo> ownerMapFromSearch = existingUsersFromService.stream().collect(Collectors.toMap(OwnerInfo::getUuid, Function.identity()));
 
 			if (CollectionUtils.isEmpty(existingUsersFromService)) {
 
-				ownerFromRequest.setUserName(UUID.randomUUID().toString());
+//				ownerFromRequest.setUserName(UUID.randomUUID().toString());
 				userDetailResponse = createUser(requestInfo, ownerFromRequest);
 				
 			} else {
 
-				String uuid = ownerFromRequest.getUuid();
-				if (uuid != null && ownerMapFromSearch.containsKey(uuid)) {
-					userDetailResponse = updateExistingUser(property, requestInfo, role, ownerFromRequest, ownerMapFromSearch.get(uuid));
-				} else {
-
-					ownerFromRequest.setUserName(UUID.randomUUID().toString());
-					userDetailResponse = createUser(requestInfo, ownerFromRequest);
-				}
+				String uuid = null;// ownerFromRequest.getUuid();
+//				if (uuid != null && ownerMapFromSearch.containsKey(uuid)) {
+//					userDetailResponse = updateExistingUser(property, requestInfo, role, ownerFromRequest, ownerMapFromSearch.get(uuid));
+//				} else {
+//
+////					ownerFromRequest.setUserName(UUID.randomUUID().toString());
+//					userDetailResponse = createUser(requestInfo, ownerFromRequest);
+//				}
 			}
 			// Assigns value of fields from user got from userDetailResponse to owner object
 			setOwnerFields(ownerFromRequest, userDetailResponse, requestInfo);
@@ -107,15 +107,15 @@ public class UserService {
 		
 		UserDetailResponse userDetailResponse;
 		
-		ownerFromRequest.setId(ownerInfoFromSearch.getId());
-		ownerFromRequest.setUuid(ownerInfoFromSearch.getUuid());
+//		ownerFromRequest.setId(ownerInfoFromSearch.getId());
+//		ownerFromRequest.setUuid(ownerInfoFromSearch.getUuid());
 		addUserDefaultFields(property.getTenantId(), role, ownerFromRequest);
 
 		StringBuilder uri = new StringBuilder(userHost).append(userContextPath).append(userUpdateEndpoint);
 		userDetailResponse = userCall(new CreateUserRequest(requestInfo, ownerFromRequest), uri);
-		if (userDetailResponse.getUser().get(0).getUuid() == null) {
-			throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
-		}
+//		if (userDetailResponse.getUser().get(0).getUuid() == null) {
+//			throw new CustomException("INVALID USER RESPONSE", "The user updated has uuid as null");
+//		}
 		return userDetailResponse;
 	}
     
@@ -134,29 +134,29 @@ public class UserService {
 
 		for (OwnerInfo ownerFromRequest : owners) {
 
-			if (ownerFromRequest.getUuid() != null && ownerFromRequest.getStatus().equals(Status.ACTIVE) && isWorkflowStarting)
-				continue;
+//			if (ownerFromRequest.getUuid() != null && ownerFromRequest.getStatus().equals(Status.ACTIVE) && isWorkflowStarting)
+//				continue;
 
 			addUserDefaultFields(property.getTenantId(), role, ownerFromRequest);
-			UserDetailResponse userDetailResponse = userExists(ownerFromRequest, requestInfo);
+			UserDetailResponse userDetailResponse = null;//userExists(ownerFromRequest, requestInfo);
 			List<OwnerInfo> existingUsersFromService = userDetailResponse.getUser();
-			Map<String, OwnerInfo> ownerMapFromSearch = existingUsersFromService.stream().collect(Collectors.toMap(OwnerInfo::getUuid, Function.identity()));
+//			Map<String, OwnerInfo> ownerMapFromSearch = existingUsersFromService.stream().collect(Collectors.toMap(OwnerInfo::getUuid, Function.identity()));
 
 			if (CollectionUtils.isEmpty(existingUsersFromService)) {
 
-				ownerFromRequest.setUserName(UUID.randomUUID().toString());
+//				ownerFromRequest.setUserName(UUID.randomUUID().toString());
 				userDetailResponse = createUser(requestInfo, ownerFromRequest);
 				
 			} else {
 
-				String uuid = ownerFromRequest.getUuid();
-				if (uuid != null && ownerMapFromSearch.containsKey(uuid)) {
-					userDetailResponse = updateExistingUser(property, requestInfo, role, ownerFromRequest, ownerMapFromSearch.get(uuid));
-				} else {
-
-					ownerFromRequest.setUserName(UUID.randomUUID().toString());
-					userDetailResponse = createUser(requestInfo, ownerFromRequest);
-				}
+//				String uuid = ownerFromRequest.getUuid();
+//				if (uuid != null && ownerMapFromSearch.containsKey(uuid)) {
+//					userDetailResponse = updateExistingUser(property, requestInfo, role, ownerFromRequest, ownerMapFromSearch.get(uuid));
+//				} else {
+//
+//					ownerFromRequest.setUserName(UUID.randomUUID().toString());
+//					userDetailResponse = createUser(requestInfo, ownerFromRequest);
+//				}
 			}
 			// Assigns value of fields from user got from userDetailResponse to owner object
 			setOwnerFields(ownerFromRequest, userDetailResponse, requestInfo);
@@ -177,7 +177,7 @@ public class UserService {
 		if (ObjectUtils.isEmpty(userDetailResponse)) {
 
 			throw new CustomException("INVALID USER RESPONSE",
-					"The user create has failed for the mobileNumber : " + owner.getUserName());
+					"The user create has failed for the mobileNumber : ");// + owner.getUserName());
 
 		}
 		return userDetailResponse;
@@ -192,14 +192,14 @@ public class UserService {
      */
     private void addUserDefaultFields(String tenantId,Role role, OwnerInfo owner){
     	
-        owner.setActive(true);
-        owner.setTenantId(tenantId);
-        owner.setRoles(Collections.singletonList(role));
-        owner.setType("CITIZEN");
-        owner.setCreatedDate(null);
-        owner.setCreatedBy(null );
-        owner.setLastModifiedDate(null);
-        owner.setLastModifiedBy(null );
+//        owner.setActive(true);
+//        owner.setTenantId(tenantId);
+//        owner.setRoles(Collections.singletonList(role));
+//        owner.setType("CITIZEN");
+//        owner.setCreatedDate(null);
+//        owner.setCreatedBy(null );
+//        owner.setLastModifiedDate(null);
+//        owner.setLastModifiedBy(null );
     }
 
     private Role getCitizenRole() {
@@ -216,16 +216,16 @@ public class UserService {
      * @param requestInfo RequestInfo from the propertyRequest
      * @return UserDetailResponse containing the user if present and the responseInfo
      */
-	private UserDetailResponse userExists(OwnerInfo owner, RequestInfo requestInfo) {
-
-		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(owner.getTenantId(), requestInfo);
-		userSearchRequest.setMobileNumber(owner.getMobileNumber());
-		userSearchRequest.setUserType(owner.getType());
-		userSearchRequest.setName(owner.getName());
-		
-        StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
-        return userCall(userSearchRequest,uri);
-    }
+//	private UserDetailResponse userExists(OwnerInfo owner, RequestInfo requestInfo) {
+//
+////		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(owner.getTenantId(), requestInfo);
+////		userSearchRequest.setMobileNumber(owner.getMobileNumber());
+////		userSearchRequest.setUserType(owner.getType());
+////		userSearchRequest.setName(owner.getName());
+//		
+//        StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
+////        return userCall(userSearchRequest,uri);
+//    }
 
 
     /**
@@ -235,15 +235,15 @@ public class UserService {
      */
     private void setUserName(OwnerInfo owner,Set<String> listOfMobileNumber){
     	
-        if(listOfMobileNumber.contains(owner.getMobileNumber())){
-            owner.setUserName(owner.getMobileNumber());
-            // Once mobileNumber is set as userName it is removed from the list
-            listOfMobileNumber.remove(owner.getMobileNumber());
-        }
-        else {
-            String username = UUID.randomUUID().toString();
-            owner.setUserName(username);
-        }
+//        if(listOfMobileNumber.contains(owner.getMobileNumber())){
+//            owner.setUserName(owner.getMobileNumber());
+//            // Once mobileNumber is set as userName it is removed from the list
+//            listOfMobileNumber.remove(owner.getMobileNumber());
+//        }
+//        else {
+//            String username = UUID.randomUUID().toString();
+//            owner.setUserName(username);
+//        }
     }
 
     /**
@@ -253,8 +253,8 @@ public class UserService {
      */
      private Set<String> getMobileNumbers(Property property,RequestInfo requestInfo,String tenantId){
     	 
-		Set<String> listOfMobileNumbers = property.getOwners().stream().map(OwnerInfo::getMobileNumber)
-				.collect(Collectors.toSet());
+//		Set<String> listOfMobileNumbers = property.getOwners().stream().map(OwnerInfo::getMobileNumber)
+//				.collect(Collectors.toSet());
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);
         
         UserSearchRequest userSearchRequest = UserSearchRequest.builder()
@@ -266,13 +266,13 @@ public class UserService {
         
         Set<String> availableMobileNumbers = new HashSet<>();
 
-        listOfMobileNumbers.forEach(mobilenumber -> {
-        	
-            userSearchRequest.setUserName(mobilenumber);
-            UserDetailResponse userDetailResponse =  userCall(userSearchRequest,uri);
-            if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
-                availableMobileNumbers.add(mobilenumber);
-        });
+//        listOfMobileNumbers.forEach(mobilenumber -> {
+//        	
+//            userSearchRequest.setUserName(mobilenumber);
+//            UserDetailResponse userDetailResponse =  userCall(userSearchRequest,uri);
+//            if(CollectionUtils.isEmpty(userDetailResponse.getUser()))
+//                availableMobileNumbers.add(mobilenumber);
+//        });
         return availableMobileNumbers;
     }
 
@@ -373,13 +373,13 @@ public class UserService {
      */
     private void setOwnerFields(OwnerInfo owner, UserDetailResponse userDetailResponse,RequestInfo requestInfo){
     	
-        owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
-        owner.setId(userDetailResponse.getUser().get(0).getId());
-        owner.setUserName((userDetailResponse.getUser().get(0).getUserName()));
-        owner.setCreatedBy(requestInfo.getUserInfo().getUuid());
-        owner.setCreatedDate(System.currentTimeMillis());
-        owner.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
-        owner.setLastModifiedDate(System.currentTimeMillis());
+//        owner.setUuid(userDetailResponse.getUser().get(0).getUuid());
+//        owner.setId(userDetailResponse.getUser().get(0).getId());
+//        owner.setUserName((userDetailResponse.getUser().get(0).getUserName()));
+//        owner.setCreatedBy(requestInfo.getUserInfo().getUuid());
+//        owner.setCreatedDate(System.currentTimeMillis());
+//        owner.setLastModifiedBy(requestInfo.getUserInfo().getUuid());
+//        owner.setLastModifiedDate(System.currentTimeMillis());
         owner.setActive(userDetailResponse.getUser().get(0).getActive());
     }
 
@@ -395,14 +395,14 @@ public class UserService {
 
 		property.getOwners().forEach(owner -> {
 
-			UserDetailResponse userDetailResponse = userExists(owner, requestInfo);
+			UserDetailResponse userDetailResponse = null;//userExists(owner, requestInfo);
 			StringBuilder uri = new StringBuilder(userHost);
 			
 			if (CollectionUtils.isEmpty(userDetailResponse.getUser())) {
 				uri = uri.append(userContextPath).append(userCreateEndpoint);
 			} else {
-				owner.setId(userDetailResponse.getUser().get(0).getId());
-				uri = uri.append(userContextPath).append(owner.getId()).append(userUpdateEndpoint);
+//				owner.setId(userDetailResponse.getUser().get(0).getId());
+//				uri = uri.append(userContextPath).append(owner.getId()).append(userUpdateEndpoint);
 			}
 			userDetailResponse = userCall(new CreateUserRequest(requestInfo, owner), uri);
 			setOwnerFields(owner, userDetailResponse, requestInfo);
@@ -435,9 +435,9 @@ public class UserService {
 		Set<String> mobileNumbers = new HashSet<>();
 
 		// Get all unique mobileNumbers in the license
-		ownerInfos.forEach(owner -> {
-			mobileNumbers.add(owner.getMobileNumber());
-		});
+//		ownerInfos.forEach(owner -> {
+//			mobileNumbers.add(owner.getMobileNumber());
+//		});
 
 		Set<OwnerInfo>  userSet = new HashSet<>();
 
@@ -475,12 +475,12 @@ public class UserService {
 		for (OwnerInfo owner: owners) {
 			OwnerInfo ownerFromRequest = new OwnerInfo();
 
-			ownerFromRequest.setUuid(owner.getUuid());
-			ownerFromRequest.setName(owner.getName());
-			ownerFromRequest.setMobileNumber(owner.getMobileNumber());
+//			ownerFromRequest.setUuid(owner.getUuid());
+//			ownerFromRequest.setName(owner.getName());
+//			ownerFromRequest.setMobileNumber(owner.getMobileNumber());
 
 			addUserDefaultFields(property.getTenantId(), role, ownerFromRequest);
-			UserDetailResponse userDetailResponse = userExists(ownerFromRequest, requestInfo);
+			UserDetailResponse userDetailResponse = null;// userExists(ownerFromRequest, requestInfo);
 			List<OwnerInfo> existingUsersFromService = userDetailResponse.getUser();
 
 			if (CollectionUtils.isEmpty(existingUsersFromService)) {
@@ -490,11 +490,11 @@ public class UserService {
 			} 
 			
 			for (OwnerInfo existingUser : existingUsersFromService) {
-				if(existingUser.getUuid().equals(ownerFromRequest.getUuid())) {
-					ownerFromRequest.setAlternatemobilenumber(owner.getAlternatemobilenumber());
-					userDetailResponse = updateExistingUser(property, requestInfo, role, ownerFromRequest, existingUser);
-					break;
-				}
+//				if(existingUser.getUuid().equals(ownerFromRequest.getUuid())) {
+//					ownerFromRequest.setAlternatemobilenumber(owner.getAlternatemobilenumber());
+//					userDetailResponse = updateExistingUser(property, requestInfo, role, ownerFromRequest, existingUser);
+//					break;
+//				}
 			}
 
 			// Assigns value of fields from user got from userDetailResponse to owner object
@@ -516,7 +516,7 @@ public class UserService {
 			UserDetailResponse userDetailResponse = searchedSingleUserExists(owner, requestInfo);
 			StringBuilder uri = new StringBuilder(userHost);
 			 
-				owner.setId(userDetailResponse.getUser().get(0).getId());
+//				owner.setId(userDetailResponse.getUser().get(0).getId());
 				uri = uri.append(userContextPath).append(userUpdateEndpoint);
 			
 			userDetailResponse = userCall(new CreateUserRequest(requestInfo, owner), uri);
@@ -531,10 +531,10 @@ public class UserService {
 
 	private UserDetailResponse searchedSingleUserExists(OwnerInfo owner, RequestInfo requestInfo) {
 		
-		UserSearchRequest userSearchRequest = getBaseUserSearchRequest(owner.getTenantId(), requestInfo);
-		userSearchRequest.setUserType(owner.getType());
+		UserSearchRequest userSearchRequest =null;// getBaseUserSearchRequest(owner.getTenantId(), requestInfo);
+//		userSearchRequest.setUserType(owner.getType());
 		Set <String> uuids = new HashSet<String>();
-		uuids.add(owner.getUuid());
+//		uuids.add(owner.getUuid());
 		userSearchRequest.setUuid(uuids);
 		
         StringBuilder uri = new StringBuilder(userHost).append(userSearchEndpoint);

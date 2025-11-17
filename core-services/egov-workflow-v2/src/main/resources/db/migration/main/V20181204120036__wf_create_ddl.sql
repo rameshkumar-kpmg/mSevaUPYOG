@@ -4,6 +4,7 @@ CREATE TABLE IF NOT EXISTS eg_wf_processinstance_v2(
     tenantid character varying(128),
     businessService character varying(128),
     businessId character varying(128),
+    moduleName character varying(128),
     action character varying(128),
     status character varying(128),
     comment character varying(128),
@@ -107,6 +108,6 @@ CREATE TABLE  IF NOT EXISTS eg_wf_action_v2
    ON DELETE CASCADE
 );
 
-CREATE INDEX   IF NOT EXISTSidx_pi_wf_action ON eg_wf_action_v2 (action);
+CREATE INDEX   IF NOT EXISTS idx_pi_wf_action ON eg_wf_action_v2 (action);
 
 

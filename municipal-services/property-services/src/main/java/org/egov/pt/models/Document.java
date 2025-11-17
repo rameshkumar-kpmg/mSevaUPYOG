@@ -1,10 +1,15 @@
 package org.egov.pt.models;
 
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
 
+import org.egov.pt.models.enums.CreationReason;
 import org.egov.pt.models.enums.Status;
+import org.egov.pt.models.workflow.Workflow;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.JsonNode;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -13,39 +18,44 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 import org.hibernate.validator.constraints.SafeHtml;
+//@Getter
+//@Setter
+//@Data
+//@AllArgsConstructor
+//@NoArgsConstructor
+//@Builder
+////(toBuilder = true)
+////@EqualsAndHashCode(of= {"fileStoreId","documentUid","id"})
+@ToString
 @Getter
 @Setter
-@Data
-@AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
-@EqualsAndHashCode(of= {"fileStoreId","documentUid","id"})
+@AllArgsConstructor
+@Builder
 public class Document {
 
-  @SafeHtml
-  @JsonProperty("id")
+  @JsonProperty("doc_id")
   private String id ;
 
+  @JsonProperty("allotment_id")
+  private String documentUid ;
+
   @JsonProperty("documentType")
-  @SafeHtml
   @NotNull
   private String documentType ;
 
   @JsonProperty("fileStoreId")
-  @SafeHtml
   @NotNull
   private String fileStoreId ;
-
-  @SafeHtml
-  @JsonProperty("documentUid")
-  private String documentUid ;
-
-  @JsonProperty("auditDetails")
-  private AuditDetails auditDetails;
-
+  
   @JsonProperty("status")
   private Status status;
+
+//  @SafeHtml
+  @JsonProperty("audit_details")
+  private AuditDetails auditDetails;
 }
 

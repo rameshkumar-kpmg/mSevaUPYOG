@@ -65,8 +65,7 @@ public class WorkflowService {
 	}
 
 	private ProcessInstance getProcessInstanceForPTR(PetRegistrationApplication application, RequestInfo requestInfo) {
-		Workflow workflow = application.getWorkflow();
-
+		Workflow workflow = application.getWorkflow();		
 		ProcessInstance processInstance = new ProcessInstance();
 		processInstance.setBusinessId(application.getApplicationNumber());
 		processInstance.setAction(workflow.getAction());
@@ -101,9 +100,10 @@ public class WorkflowService {
 	 *
 	 */
 	public State callWorkFlow(ProcessInstanceRequest workflowReq) {
-
+       
 		ProcessInstanceResponse response = null;
 		StringBuilder url = new StringBuilder(configs.getWfHost().concat(configs.getWfTransitionPath()));
+		System.out.println("---"+workflowReq);
 		Object object = serviceRequestRepository.fetchResult(url, workflowReq);
 		response = mapper.convertValue(object, ProcessInstanceResponse.class);
 		return response.getProcessInstances().get(0).getState();

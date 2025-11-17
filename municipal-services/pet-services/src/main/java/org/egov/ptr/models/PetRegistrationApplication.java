@@ -52,7 +52,7 @@ public class PetRegistrationApplication {
 	@JsonProperty("renewalAuditDetails")
 	private PetRenewalAuditDetails renewalAuditDetails;
 
-	@NotBlank
+//	@NotBlank
 	@ApiModelProperty(required = true, value = "Type of application")
 	@JsonProperty("applicationType")
 	private String applicationType;

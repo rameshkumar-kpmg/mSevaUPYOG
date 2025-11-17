@@ -66,16 +66,19 @@ public class BusinessServiceRepository {
         }
 
         List<BusinessService> searchResults = new LinkedList<>();
-
+        
         if(!CollectionUtils.isEmpty(stateLevelBusinessServices)){
             BusinessServiceSearchCriteria stateLevelCriteria = new BusinessServiceSearchCriteria();
             stateLevelCriteria.setTenantId(criteria.getTenantId().split("\\.")[0]);
             stateLevelCriteria.setBusinessServices(stateLevelBusinessServices);
             List<Object> stateLevelPreparedStmtList = new ArrayList<>();
             query = queryBuilder.getBusinessServices(stateLevelCriteria, stateLevelPreparedStmtList);
+            System.out.println("stateLevelBusinessServices:-----------"+stateLevelPreparedStmtList);
+            
             searchResults.addAll(jdbcTemplate.query(query, stateLevelPreparedStmtList.toArray(), rowMapper));
         }
         if(!CollectionUtils.isEmpty(tenantBusinessServices)){
+        	System.out.println("tenantBusinessServices:-----------"+tenantBusinessServices);
             BusinessServiceSearchCriteria tenantLevelCriteria = new BusinessServiceSearchCriteria();
             tenantLevelCriteria.setTenantId(criteria.getTenantId());
             tenantLevelCriteria.setBusinessServices(tenantBusinessServices);

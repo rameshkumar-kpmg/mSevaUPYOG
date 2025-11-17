@@ -22,10 +22,10 @@ import org.egov.pt.models.user.UserSearchRequest;
 import org.egov.pt.models.PropertyAudit;
 import org.egov.pt.repository.builder.PropertyQueryBuilder;
 import org.egov.pt.repository.rowmapper.EncryptionCountRowMapper;
-import org.egov.pt.repository.rowmapper.OpenPropertyRowMapper;
+//import org.egov.pt.repository.rowmapper.OpenPropertyRowMapper;
 import org.egov.pt.repository.rowmapper.PropertyAuditRowMapper;
-import org.egov.pt.repository.rowmapper.PropertyRowMapper;
-import org.egov.pt.repository.rowmapper.PropertySearchRowMapper;
+//import org.egov.pt.repository.rowmapper.PropertyRowMapper;
+//import org.egov.pt.repository.rowmapper.PropertySearchRowMapper;
 import org.egov.pt.repository.rowmapper.PropertyAuditEncRowMapper;
 import org.egov.pt.service.UserService;
 import org.egov.pt.util.PropertyUtil;
@@ -49,17 +49,14 @@ public class PropertyRepository {
 	@Autowired
 	private PropertyQueryBuilder queryBuilder;
 
-	@Autowired
-	private PropertyRowMapper rowMapper;
-	
-	@Autowired
-	private PropertySearchRowMapper rowSearchMapper;
-	
-	
-	
-	
-	@Autowired
-	private OpenPropertyRowMapper openRowMapper;
+//	@Autowired
+//	private PropertyRowMapper rowMapper;
+//	
+//	@Autowired
+//	private PropertySearchRowMapper rowSearchMapper;
+//	
+//	@Autowired
+//	private OpenPropertyRowMapper openRowMapper;
 	
 	@Autowired
 	private PropertyAuditRowMapper auditRowMapper;
@@ -76,31 +73,31 @@ public class PropertyRepository {
 	@Autowired
 	private PropertyAuditEncRowMapper propertyAuditEncRowMapper;
     
-	public List<String> getPropertyIds(Set<String> ownerIds, String tenantId) {
+//	public List<String> getPropertyIds(Set<String> ownerIds, String tenantId) {
+//
+//		List<Object> preparedStmtList = new ArrayList<>();
+//		String query = queryBuilder.getPropertyIdsQuery(ownerIds, tenantId, preparedStmtList);
+//		return jdbcTemplate.queryForList(query, preparedStmtList.toArray(), String.class);
+//	}
 
-		List<Object> preparedStmtList = new ArrayList<>();
-		String query = queryBuilder.getPropertyIdsQuery(ownerIds, tenantId, preparedStmtList);
-		return jdbcTemplate.queryForList(query, preparedStmtList.toArray(), String.class);
-	}
-
-	public List<Property> getProperties(PropertyCriteria criteria, Boolean isApiOpen, Boolean isPlainSearch) {
-
-		List<Object> preparedStmtList = new ArrayList<>();
-		String query;
-		
-		if(criteria.getIsDefaulterNoticeSearch())
-			query=queryBuilder.getPropertySearchQueryForDeafauterNotice(criteria,preparedStmtList);
-		else
-			query=queryBuilder.getPropertySearchQuery(criteria, preparedStmtList, isPlainSearch, false);
-		if(log.isDebugEnabled())
-			log.debug("Query for Property search is " + query + " with parameters " +  preparedStmtList.toArray().toString());
-		if (isApiOpen)
-			return jdbcTemplate.query(query, preparedStmtList.toArray(), openRowMapper);
-		if(criteria.getIsDefaulterNoticeSearch())
-			return jdbcTemplate.query(query, preparedStmtList.toArray(), rowSearchMapper);
-		else
-			return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
-	}
+//	public List<Property> getProperties(PropertyCriteria criteria, Boolean isApiOpen, Boolean isPlainSearch) {
+//
+//		List<Object> preparedStmtList = new ArrayList<>();
+//		String query;
+//		
+//		if(criteria.getIsDefaulterNoticeSearch())
+//			query=queryBuilder.getPropertySearchQueryForDeafauterNotice(criteria,preparedStmtList);
+//		else
+//			query=queryBuilder.getPropertySearchQuery(criteria, preparedStmtList, isPlainSearch, false);
+//		if(log.isDebugEnabled())
+//			log.debug("Query for Property search is " + query + " with parameters " +  preparedStmtList.toArray().toString());
+////		if (isApiOpen)
+////			return jdbcTemplate.query(query, preparedStmtList.toArray(), openRowMapper);
+////		if(criteria.getIsDefaulterNoticeSearch())
+////			return jdbcTemplate.query(query, preparedStmtList.toArray(), rowSearchMapper);
+////		else
+////			return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
+//	}
 
 	public List<String> getPropertyIds(PropertyCriteria criteria) {
 
@@ -109,11 +106,11 @@ public class PropertyRepository {
 		return jdbcTemplate.query(query, preparedStmtList.toArray(), new SingleColumnRowMapper<>());
 	}
 
-	public List<Property> getPropertiesForBulkSearch(PropertyCriteria criteria, Boolean isPlainSearch) {
-		List<Object> preparedStmtList = new ArrayList<>();
-		String query = queryBuilder.getPropertyQueryForBulkSearch(criteria, preparedStmtList, isPlainSearch);
-		return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
-	}
+//	public List<Property> getPropertiesForBulkSearch(PropertyCriteria criteria, Boolean isPlainSearch) {
+//		List<Object> preparedStmtList = new ArrayList<>();
+//		String query = queryBuilder.getPropertyQueryForBulkSearch(criteria, preparedStmtList, isPlainSearch);
+//		return jdbcTemplate.query(query, preparedStmtList.toArray(), rowMapper);
+//	}
 
 	private String createQuery(Set<String> ids) {
 		StringBuilder builder = new StringBuilder();
@@ -168,19 +165,19 @@ public class PropertyRepository {
 	 */
 		public List<Property> getPropertiesWithOwnerInfo(PropertyCriteria criteria, RequestInfo requestInfo, Boolean isInternal) {
 
-			List<Property> properties;
+			List<Property> properties = null;
 		
 			  Boolean isOpenSearch = isInternal ? false : util.isPropertySearchOpen(requestInfo.getUserInfo());
 
 			    if (criteria.isAudit() && !isOpenSearch) {
 			        properties = getPropertyAudit(criteria);
 			    } else {
-			        properties = getProperties(criteria, isOpenSearch, false);
+//			        properties = getProperties(criteria, isOpenSearch, false);
 			    }
 
-			    if (CollectionUtils.isEmpty(properties)) {
-			        return Collections.emptyList();
-			    }
+//			    if (CollectionUtils.isEmpty(properties)) {
+//			        return Collections.emptyList();
+//			    }
 
 			    Map<String, Long> maxModifiedTimeMap = properties.stream()
 			            .collect(Collectors.toMap(
@@ -200,14 +197,14 @@ public class PropertyRepository {
 			    Set<String> ownerIds = latestProperties.stream()
 			            .map(Property::getOwners)
 			            .flatMap(List::stream)
-			            .map(OwnerInfo::getUuid)
+			            .map(OwnerInfo::getAadharCardNumber)
 			            .collect(Collectors.toSet());
 
 			    UserSearchRequest userSearchRequest = userService.getBaseUserSearchRequest(criteria.getTenantId(), requestInfo);
 			    userSearchRequest.setUuid(ownerIds);
 
 			    UserDetailResponse userDetailResponse = userService.getUser(userSearchRequest);
-			    util.enrichOwner(userDetailResponse, latestProperties, isOpenSearch);
+//			    util.enrichOwner(userDetailResponse, latestProperties, isOpenSearch);
 
 			    return latestProperties;
 	}
@@ -257,20 +254,20 @@ public class PropertyRepository {
 			return true;
 
 		// fetching property id from owner table and enriching criteria
-		ownerIds.addAll(userDetailResponse.getUser().stream().map(User::getUuid).collect(Collectors.toSet()));
+//		ownerIds.addAll(userDetailResponse.getUser().stream().map(User::getUuid).collect(Collectors.toSet()));
 		
-		if (criteria.getIsCitizen()!=null && criteria.getMobileNumber()!=null) {
-			for (OwnerInfo user : userDetailResponse.getUser()) {
-				if (user.getAlternatemobilenumber()!=null && user.getAlternatemobilenumber().equalsIgnoreCase(criteria.getMobileNumber())) {
-					ownerIds.remove(user.getUuid());
-				}
-				
-			}
-		}
+//		if (criteria.getIsCitizen()!=null && criteria.getMobileNumber()!=null) {
+//			for (OwnerInfo user : userDetailResponse.getUser()) {
+//				if (user.getAlternatemobilenumber()!=null && user.getAlternatemobilenumber().equalsIgnoreCase(criteria.getMobileNumber())) {
+//					ownerIds.remove(user.getUuid());
+//				}
+//				
+//			}
+//		}
 		
 
 		// only used to eliminate property-ids which does not have the owner
-		List<String> propertyIds = getPropertyIds(ownerIds, userTenant);
+		List<String> propertyIds =null;// getPropertyIds(ownerIds, userTenant);
 
 		// returning empty list if no property id found for user criteria
 		if (CollectionUtils.isEmpty(propertyIds)) {

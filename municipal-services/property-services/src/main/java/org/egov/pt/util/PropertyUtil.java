@@ -7,7 +7,6 @@ import static org.egov.pt.util.PTConstants.BILL_NO_PAYABLE_DEMAND_ERROR_CODE;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -16,11 +15,11 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.Role;
 import org.egov.common.contract.request.User;
 import org.egov.pt.config.PropertyConfiguration;
+import org.egov.pt.models.AllotmentDetails;
+import org.egov.pt.models.AllotmentRequest;
 import org.egov.pt.models.OwnerInfo;
 import org.egov.pt.models.Property;
 import org.egov.pt.models.enums.CreationReason;
-import org.egov.pt.models.enums.Source;
-import org.egov.pt.models.user.UserDetailResponse;
 import org.egov.pt.models.workflow.ProcessInstance;
 import org.egov.pt.models.workflow.ProcessInstanceRequest;
 import org.egov.pt.repository.ServiceRequestRepository;
@@ -35,7 +34,6 @@ import org.springframework.stereotype.Component;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -61,32 +59,32 @@ public class PropertyUtil extends CommonUtils {
 	 * @param properties         List of property whose owner's are to be populated
 	 *                           from userDetailResponse
 	 */
-	public void enrichOwner(UserDetailResponse userDetailResponse, List<Property> properties, Boolean isSearchOpen) {
-
-		List<OwnerInfo> users = userDetailResponse.getUser();
-		Map<String, OwnerInfo> userIdToOwnerMap = new HashMap<>();
-		users.forEach(user -> userIdToOwnerMap.put(user.getUuid(), user));
-
-		properties.forEach(property -> {
-
-			property.getOwners().forEach(owner -> {
-
-				if (userIdToOwnerMap.get(owner.getUuid()) == null)
-					log.info("OWNER SEARCH ERROR",
-							"The owner with UUID : \"" + owner.getUuid() + "\" for the property with Id \""
-									+ property.getPropertyId() + "\" is not present in user search response");
-				else {
-
-					OwnerInfo info = userIdToOwnerMap.get(owner.getUuid());
-					if (isSearchOpen) {
-						owner.addUserDetail(getMaskedOwnerInfo(info));
-					} else {
-						owner.addUserDetail(info);
-					}
-				}
-			});
-		});
-	}
+//	public void enrichOwner(UserDetailResponse userDetailResponse, List<Property> properties, Boolean isSearchOpen) {
+//
+//		List<OwnerInfo> users = userDetailResponse.getUser();
+//		Map<String, OwnerInfo> userIdToOwnerMap = new HashMap<>();
+//		users.forEach(user -> userIdToOwnerMap.put(user.getUuid(), user));
+//
+//		properties.forEach(property -> {
+//
+//			property.getOwners().forEach(owner -> {
+//
+//				if (userIdToOwnerMap.get(owner.getUuid()) == null)
+//					log.info("OWNER SEARCH ERROR",
+//							"The owner with UUID : \"" + owner.getUuid() + "\" for the property with Id \""
+//									+ property.getPropertyId() + "\" is not present in user search response");
+//				else {
+//
+//					OwnerInfo info = userIdToOwnerMap.get(owner.getUuid());
+//					if (isSearchOpen) {
+//						owner.addUserDetail(getMaskedOwnerInfo(info));
+//					} else {
+//						owner.addUserDetail(info);
+//					}
+//				}
+//			});
+//		});
+//	}
 
 	/**
 	 * nullifying the PII's for open search
@@ -95,14 +93,14 @@ public class PropertyUtil extends CommonUtils {
 	 */
 	private org.egov.pt.models.user.User getMaskedOwnerInfo(OwnerInfo info) {
 
-		info.setMobileNumber(null);
-		info.setUuid(null);
-		info.setUserName(null);
-		info.setGender(null);
-		info.setAltContactNumber(null);
-		info.setPwdExpiryDate(null);
+//		info.setMobileNumber(null);
+//		info.setUuid(null);
+//		info.setUserName(null);
+//		info.setGender(null);
+//		info.setAltContactNumber(null);
+//		info.setPwdExpiryDate(null);
 
-		return info;
+		return null;//info;
 	}
 
 
@@ -125,28 +123,29 @@ public class PropertyUtil extends CommonUtils {
 				.build();
 	}
 
-	public ProcessInstanceRequest getWfForPropertyRegistry(PropertyRequest request, CreationReason creationReasonForWorkflow) {
+	public ProcessInstanceRequest getWfForPropertyRegistry(AllotmentRequest allotmentRequest, CreationReason creationReasonForWorkflow) {
 
-		Property property = request.getProperty();
-		ProcessInstance wf = null != property.getWorkflow() ? property.getWorkflow() : new ProcessInstance();
+		AllotmentDetails allotmentDetails=allotmentRequest.getAllotment();
+//		Property property = request.getProperty();
+		ProcessInstance wf = /* null != property.getWorkflow() ? property.getWorkflow() : */new ProcessInstance();
 
-		wf.setBusinessId(property.getAcknowldgementNumber());
-		wf.setTenantId(property.getTenantId());
+//		wf.setBusinessId(property.getAcknowldgementNumber());
+		wf.setTenantId(allotmentDetails.getTenantId());
 
 		switch (creationReasonForWorkflow) {
 
 			case CREATE :
-				if(property.getSource().equals(Source.WATER_CHARGES)){
-					JSONObject response=getWnsPTworkflowConfig(request);
+//				if(property.getSource().equals(Source.WATER_CHARGES)){
+					JSONObject response=getWnsRLworkflowConfig(allotmentRequest);
 					wf.setBusinessService(response.get("businessService").toString());
 					wf.setModuleName(configs.getPropertyModuleName());
 					wf.setAction(response.get("initialAction").toString());
-				}
-				else{
-					wf.setBusinessService(configs.getCreatePTWfName());
-					wf.setModuleName(configs.getPropertyModuleName());
-					wf.setAction("OPEN");
-				}
+//				}
+//				else{
+//					wf.setBusinessService(configs.getCreatePTWfName());
+//					wf.setModuleName(configs.getPropertyModuleName());
+//					wf.setAction("OPEN");
+//				}
 				break;
 
 			case LEGACY_ENTRY :
@@ -167,10 +166,10 @@ public class PropertyUtil extends CommonUtils {
 				break;
 		}
 
-		property.setWorkflow(wf);
+//		allotmentDetails.setWorkflow(wf);
 		return ProcessInstanceRequest.builder()
 				.processInstances(Arrays.asList(wf))
-				.requestInfo(request.getRequestInfo())
+				.requestInfo(allotmentRequest.getRequestInfo())
 				.build();
 	}
 
@@ -208,7 +207,7 @@ public class PropertyUtil extends CommonUtils {
 	}
 
 	public void clearSensitiveDataForPersistance(Property property) {
-		property.getOwners().forEach(owner -> owner.setMobileNumber(null));
+//		property.getOwners().forEach(owner -> owner.setMobileNumber(null));
 	}
 
 	/**
@@ -262,16 +261,16 @@ public class PropertyUtil extends CommonUtils {
 		List<OwnerInfo> copyOwners = new ArrayList<>();
 		owners.forEach(owner -> {
 
-			copyOwners.add(new OwnerInfo(owner));
+//			copyOwners.add(new OwnerInfo(owner));
 		});
 		return copyOwners;
 	}
 
-	public JSONObject getWnsPTworkflowConfig(PropertyRequest request){
-		List<String> masterName = Arrays.asList( "PTWorkflow");
-		Map<String, List<String>> codes = getAttributeValues(configs.getStateLevelTenantId(), PTConstants.MDMS_PT_MOD_NAME,masterName , "$.*",PTConstants.JSONPATH_CODES, request.getRequestInfo());
+	public JSONObject getWnsRLworkflowConfig(AllotmentRequest allotmentRequest){
+		List<String> masterName = Arrays.asList( "RL_SERVICE");
+		Map<String, List<String>> codes = getAttributeValues(configs.getStateLevelTenantId(), PTConstants.MDMS_PT_MOD_NAME,masterName , "$.*",PTConstants.JSONPATH_CODES, allotmentRequest.getRequestInfo());
 		JSONObject obj = new JSONObject(codes);
-		JSONArray configArray = obj.getJSONArray("PTWorkflow");
+		JSONArray configArray = obj.getJSONArray("RL_SERVICE");
 		JSONObject response = new JSONObject();
 		for(int i=0;i<configArray.length();i++){
 			if(configArray.getJSONObject(i).getBoolean("enable"))

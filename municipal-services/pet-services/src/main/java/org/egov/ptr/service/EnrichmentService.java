@@ -71,7 +71,8 @@ public class EnrichmentService {
 			application.setId(UUID.randomUUID().toString());
 			application.setApplicationNumber(petRegistrationIdList.get(index++));
 			application.setValidityDate(validityDateUnix);
-//			application.setStatus(STATUS_APPLIED);
+
+			// application.setStatus(STATUS_APPLIED);
 			application.setExpireFlag(false);
 
 			// Enrich address, pet details, and owner

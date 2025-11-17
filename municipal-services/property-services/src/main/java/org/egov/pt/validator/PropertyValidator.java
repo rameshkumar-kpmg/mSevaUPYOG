@@ -99,11 +99,11 @@ public class PropertyValidator {
 			validateUnits(request, errorMap);
 		
 		
-		Set<String> uniqueOwnerSet = owners.stream()
-				.map(owner -> owner.getName() + owner.getMobileNumber()).collect(Collectors.toSet());
-		
-		if (uniqueOwnerSet.size() != owners.size())
-			throw new CustomException("EG_PT_OWNER INFO ERROR", "Duplicate Owners in the request");
+//		Set<String> uniqueOwnerSet = owners.stream()
+//				.map(owner -> owner.getName() + owner.getMobileNumber()).collect(Collectors.toSet());
+//		
+//		if (uniqueOwnerSet.size() != owners.size())
+//			throw new CustomException("EG_PT_OWNER INFO ERROR", "Duplicate Owners in the request");
 			
 		
 
@@ -214,7 +214,7 @@ public class PropertyValidator {
         /*
          * Blocking owner changes in update flow
          */
-		List<String> searchOwnerUuids = propertyFromSearch.getOwners().stream().map(OwnerInfo::getUuid).collect(Collectors.toList());
+		List<String> searchOwnerUuids = propertyFromSearch.getOwners().stream().map(OwnerInfo::getOwnerId).collect(Collectors.toList());
 		List<String> uuidsNotFound = new ArrayList<>();
 
 		if (!CollectionUtils.isEmpty(uuidsNotFound))
@@ -518,7 +518,7 @@ public class PropertyValidator {
 		String uuid = request.getRequestInfo().getUserInfo().getUuid();
 		Property property = request.getProperty();
 
-		Set<String> ownerMobileNumbers = propertyFromSearch.getOwners().stream().map(OwnerInfo::getMobileNumber).collect(Collectors.toSet());
+		Set<String> ownerMobileNumbers = propertyFromSearch.getOwners().stream().map(OwnerInfo::getMobileNo).collect(Collectors.toSet());
 
 		if (!(ownerMobileNumbers.contains(mobileNumberFromRequestInfo) || uuid.equalsIgnoreCase(propertyFromSearch.getAccountId()))) {
 			errorMap.put("EG_PT_UPDATE AUTHORIZATION FAILURE",
@@ -543,14 +543,14 @@ public class PropertyValidator {
 		if (!property.getOwnershipCategory().contains("INSTITUTIONAL")) {
 
 			owners.forEach(owner -> {
-				if (!isMobileNumberValid(owner.getMobileNumber()))
+				if (!isMobileNumberValid(owner.getMobileNo()))
 					errorMap.put("INVALID OWNER", "MobileNumber is not valid for user : " + property.getPropertyId());
 			});
 		} else {
 			owners.forEach(owner -> {
-				if (owner.getAltContactNumber() == null)
+				if (owner.getMobileNo() == null)
 					errorMap.put("INVALID OWNER",
-							" Alternate ContactNumber cannot be null for institution : " + owner.getName());
+							" Alternate ContactNumber cannot be null for institution : " + owner.getFirstName());
 			});
 		}
 
@@ -718,35 +718,35 @@ List<String> allowedParams = null;
 		Boolean isNewOWnerAdded = false;
 		Boolean isOwnerCancelled = false;
 		Set<Status> statusSet = new HashSet<>();
-		Set<String> searchOwnerUuids = propertyFromSearch.getOwners().stream().map(OwnerInfo::getUuid).collect(Collectors.toSet());
+		Set<String> searchOwnerUuids = propertyFromSearch.getOwners().stream().map(OwnerInfo::getOwnerId).collect(Collectors.toSet());
 		List<String> uuidsNotFound = new ArrayList<String>();
 		Map<String, Integer> activeMobileNumberPlusNameOwnerMap = new HashMap<>();
 		
 		for (OwnerInfo owner : property.getOwners()) {
 
-			if (owner.getStatus() == Status.ACTIVE) {
-
-				String key = owner.getMobileNumber() + owner.getName();
-				if (activeMobileNumberPlusNameOwnerMap.get(key) == null) {
-					activeMobileNumberPlusNameOwnerMap.put(key, 1);
-				} else {
-					Integer val = activeMobileNumberPlusNameOwnerMap.get(key);
-					activeMobileNumberPlusNameOwnerMap.put(key, val++);
-				}
-			}
+//			if (owner.getStatus() == Status.ACTIVE) {
+//
+//				String key = owner.getMobileNumber() + owner.getName();
+//				if (activeMobileNumberPlusNameOwnerMap.get(key) == null) {
+//					activeMobileNumberPlusNameOwnerMap.put(key, 1);
+//				} else {
+//					Integer val = activeMobileNumberPlusNameOwnerMap.get(key);
+//					activeMobileNumberPlusNameOwnerMap.put(key, val++);
+//				}
+//			}
 			
 			if (StringUtils.isEmpty(owner.getStatus())) {
 				isNullStatusFound = true;
 			}
 
-			statusSet.add(owner.getStatus());
-			if (owner.getUuid() == null && owner.getStatus().equals(Status.ACTIVE))
-				isNewOWnerAdded = true;
-			else if (owner.getStatus().equals(Status.INACTIVE))
-				isOwnerCancelled = true;
+//			statusSet.add(owner.getStatus());
+//			if (owner.getUuid() == null && owner.getStatus().equals(Status.ACTIVE))
+//				isNewOWnerAdded = true;
+//			else if (owner.getStatus().equals(Status.INACTIVE))
+//				isOwnerCancelled = true;
 
-			if (owner.getUuid() != null && !searchOwnerUuids.contains(owner.getUuid()))
-				uuidsNotFound.add(owner.getUuid());
+			if (owner.getOwnerId() != null && !searchOwnerUuids.contains(owner.getOwnerId()))
+				uuidsNotFound.add(owner.getOwnerId());
 		}
 		
 		if(activeMobileNumberPlusNameOwnerMap.values().stream().anyMatch(valueCount -> valueCount > 1))
@@ -828,8 +828,8 @@ List<String> allowedParams = null;
 
 		List <String> alternateNumbersinRequest = new ArrayList<String>();
 		for(OwnerInfo owner : property.getOwners()) {
-			if(owner.getAlternatemobilenumber()!=null) {
-				alternateNumbersinRequest.add(owner.getAlternatemobilenumber());
+			if(owner.getMobileNo()!=null) {
+				alternateNumbersinRequest.add(owner.getMobileNo());
 			}
 		}
 		
@@ -840,13 +840,13 @@ List<String> allowedParams = null;
 		Map<String, String> userToAlternateNumberMap = new HashMap<String,String>(); 
 		
 		for(OwnerInfo owner : propertyFromSearch.getOwners()) {
-			userToAlternateNumberMap.put(owner.getUuid(), owner.getAlternatemobilenumber());
+			userToAlternateNumberMap.put(owner.getOwnerId(), owner.getMobileNo());
 		}
 		
 		boolean isAlternateNumberSame = true;
 		
 		for(OwnerInfo owner : property.getOwners()) {
-			if(userToAlternateNumberMap.get(owner.getUuid())!=null && userToAlternateNumberMap.get(owner.getUuid()).equals(owner.getAlternatemobilenumber()) ) {
+			if(userToAlternateNumberMap.get(owner.getOwnerId())!=null && userToAlternateNumberMap.get(owner.getOwnerId()).equals(owner.getMobileNo()) ) {
 					isAlternateNumberSame = true;
 			}
 			
@@ -861,13 +861,13 @@ List<String> allowedParams = null;
 		}
 		
 		for(OwnerInfo owner : property.getOwners()) {
-			if(!userToAlternateNumberMap.containsKey(owner.getUuid())) {
+			if(!userToAlternateNumberMap.containsKey(owner.getOwnerId())) {
 				throw new CustomException("EG_PT_OWNER_DOES_NOT_EXIST", "New owner can not be added while updating alternate mobile number details");
 			}
 			
 			else {
 				
-				if(owner.getMobileNumber().equals(owner.getAlternatemobilenumber())) {
+				if(owner.getMobileNo().equals(owner.getMobileNo())) {
 					throw new CustomException("EG_PT_ALTERNATE_EXISTS", "The alternate mobile number should not be same as primary number");
 				}
 			}

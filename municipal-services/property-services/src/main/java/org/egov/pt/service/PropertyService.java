@@ -106,7 +106,7 @@ public class PropertyService {
 		userService.createUser(request);
 		if (config.getIsWorkflowEnabled()
 				&& !request.getProperty().getCreationReason().equals(CreationReason.DATA_UPLOAD)) {
-			wfService.updateWorkflow(request, request.getProperty().getCreationReason());
+//			wfService.updateWorkflow(request, request.getProperty().getCreationReason());
 
 		} else {
 
@@ -228,20 +228,20 @@ public class PropertyService {
 		Map<String, String> uuidToMobileNumber = new HashMap<String, String>();
 		List<OwnerInfo> owners = propertyFromSearch.getOwners();
 
-		for (OwnerInfo owner : owners) {
-			uuidToMobileNumber.put(owner.getUuid(), owner.getMobileNumber());
-		}
+//		for (OwnerInfo owner : owners) {
+//			uuidToMobileNumber.put(owner.getUuid(), owner.getMobileNumber());
+//		}
 
 		List<OwnerInfo> ownersFromRequest = request.getProperty().getOwners();
 
 		Boolean isNumberDifferent = false;
-		for (OwnerInfo owner : ownersFromRequest) {
-			if (uuidToMobileNumber.containsKey(owner.getUuid())
-					&& !uuidToMobileNumber.get(owner.getUuid()).equals(owner.getMobileNumber())) {
-				isNumberDifferent = true;
-				break;
-			}
-		}
+//		for (OwnerInfo owner : ownersFromRequest) {
+//			if (uuidToMobileNumber.containsKey(owner.getUuid())
+//					&& !uuidToMobileNumber.get(owner.getUuid()).equals(owner.getMobileNumber())) {
+//				isNumberDifferent = true;
+//				break;
+//			}
+//		}
 
 		return isNumberDifferent;
 	}
@@ -292,40 +292,40 @@ public class PropertyService {
 				.property(propertyFromSearch).build();
 
 		util.mergeAdditionalDetails(request, propertyFromSearch);
-
-		if (config.getIsWorkflowEnabled()) {
-
-			State state = wfService.updateWorkflow(request, CreationReason.UPDATE);
-
-			if (state.getIsStartState() == true
-					&& state.getApplicationStatus().equalsIgnoreCase(Status.INWORKFLOW.toString())
-					&& !propertyFromSearch.getStatus().equals(Status.INWORKFLOW)) {
-				propertyFromSearch.setStatus(Status.INACTIVE);
-
-				producer.push(config.getUpdatePropertyTopic(), OldPropertyRequest);
-				util.saveOldUuidToRequest(request, propertyFromSearch.getId());
-				producer.push(config.getSavePropertyTopic(), request);
-
-			}
-
-			else if (state.getIsTerminateState()
-					&& !state.getApplicationStatus().equalsIgnoreCase(Status.ACTIVE.toString())) {
-
-				terminateWorkflowAndReInstatePreviousRecord(request, propertyFromSearch);
-			} else {
-				/*
-				 * If property is In Workflow then continue
-				 */
-				producer.push(config.getUpdatePropertyTopic(), request);
-			}
-
-		} else {
-
-			/*
-			 * If no workflow then update property directly with mutation information
-			 */
-			producer.push(config.getUpdatePropertyTopic(), request);
-		}
+//
+//		if (config.getIsWorkflowEnabled()) {
+//
+//			State state = wfService.updateWorkflow(request, CreationReason.UPDATE);
+//
+//			if (state.getIsStartState() == true
+//					&& state.getApplicationStatus().equalsIgnoreCase(Status.INWORKFLOW.toString())
+//					&& !propertyFromSearch.getStatus().equals(Status.INWORKFLOW)) {
+//				propertyFromSearch.setStatus(Status.INACTIVE);
+//
+//				producer.push(config.getUpdatePropertyTopic(), OldPropertyRequest);
+//				util.saveOldUuidToRequest(request, propertyFromSearch.getId());
+//				producer.push(config.getSavePropertyTopic(), request);
+//
+//			}
+//
+//			else if (state.getIsTerminateState()
+//					&& !state.getApplicationStatus().equalsIgnoreCase(Status.ACTIVE.toString())) {
+//
+//				terminateWorkflowAndReInstatePreviousRecord(request, propertyFromSearch);
+//			} else {
+//				/*
+//				 * If property is In Workflow then continue
+//				 */
+//				producer.push(config.getUpdatePropertyTopic(), request);
+//			}
+//
+//		} else {
+//
+//			/*
+//			 * If no workflow then update property directly with mutation information
+//			 */
+//			producer.push(config.getUpdatePropertyTopic(), request);
+//		}
 	}
 
 	/*
@@ -338,7 +338,7 @@ public class PropertyService {
 		List<OwnerInfo> owners = propertyFromSearch.getOwners();
 
 		for (OwnerInfo owner : owners) {
-			uuidToMobileNumber.put(owner.getUuid(), owner.getMobileNumber());
+//			uuidToMobileNumber.put(owner.getUuid(), owner.getMobileNumber());
 		}
 
 		userService.updateUserMobileNumber(request, uuidToMobileNumber);
@@ -365,44 +365,44 @@ public class PropertyService {
 		PropertyRequest oldPropertyRequest = PropertyRequest.builder().requestInfo(request.getRequestInfo())
 				.property(propertyFromSearch).build();
 
-		if (config.getIsMutationWorkflowEnabled()) {
-
-			State state = wfService.updateWorkflow(request, CreationReason.MUTATION);
-
-			/*
-			 * updating property from search to INACTIVE status
-			 *
-			 * to create new entry for new Mutation
-			 */
-			if (state.getIsStartState() == true
-					&& state.getApplicationStatus().equalsIgnoreCase(Status.INWORKFLOW.toString())
-					&& !propertyFromSearch.getStatus().equals(Status.INWORKFLOW)) {
-
-				propertyFromSearch.setStatus(Status.INACTIVE);
-				producer.push(config.getUpdatePropertyTopic(), oldPropertyRequest);
-
-				util.saveOldUuidToRequest(request, propertyFromSearch.getId());
-				/* save new record */
-				producer.push(config.getSavePropertyTopic(), request);
-
-			} else if (state.getIsTerminateState()
-					&& !state.getApplicationStatus().equalsIgnoreCase(Status.ACTIVE.toString())) {
-
-				terminateWorkflowAndReInstatePreviousRecord(request, propertyFromSearch);
-			} else {
-				/*
-				 * If property is In Workflow then continue
-				 */
-				producer.push(config.getUpdatePropertyTopic(), request);
-			}
-
-		} else {
-
-			/*
-			 * If no workflow then update property directly with mutation information
-			 */
-			producer.push(config.getUpdatePropertyTopic(), request);
-		}
+//		if (config.getIsMutationWorkflowEnabled()) {
+//
+//			State state = wfService.updateWorkflow(request, CreationReason.MUTATION);
+//
+//			/*
+//			 * updating property from search to INACTIVE status
+//			 *
+//			 * to create new entry for new Mutation
+//			 */
+//			if (state.getIsStartState() == true
+//					&& state.getApplicationStatus().equalsIgnoreCase(Status.INWORKFLOW.toString())
+//					&& !propertyFromSearch.getStatus().equals(Status.INWORKFLOW)) {
+//
+//				propertyFromSearch.setStatus(Status.INACTIVE);
+//				producer.push(config.getUpdatePropertyTopic(), oldPropertyRequest);
+//
+//				util.saveOldUuidToRequest(request, propertyFromSearch.getId());
+//				/* save new record */
+//				producer.push(config.getSavePropertyTopic(), request);
+//
+//			} else if (state.getIsTerminateState()
+//					&& !state.getApplicationStatus().equalsIgnoreCase(Status.ACTIVE.toString())) {
+//
+//				terminateWorkflowAndReInstatePreviousRecord(request, propertyFromSearch);
+//			} else {
+//				/*
+//				 * If property is In Workflow then continue
+//				 */
+//				producer.push(config.getUpdatePropertyTopic(), request);
+//			}
+//
+//		} else {
+//
+//			/*
+//			 * If no workflow then update property directly with mutation information
+//			 */
+//			producer.push(config.getUpdatePropertyTopic(), request);
+//		}
 	}
 
 	private void terminateWorkflowAndReInstatePreviousRecord(PropertyRequest request, Property propertyFromSearch) {
@@ -558,10 +558,10 @@ public class PropertyService {
 
 			for (OwnerInfo owner : property.getOwners()) {
 
-				if (ownerIds.contains(owner.getUuid())) {
-					isOwnerPresent = true;
-					break;
-				}
+//				if (ownerIds.contains(owner.getUuid())) {
+//					isOwnerPresent = true;
+//					break;
+//				}
 			}
 			if (!isOwnerPresent)
 				propertiesToBeRemoved.add(property);
@@ -600,16 +600,16 @@ public class PropertyService {
 			propertyCriteria.setUuids(new HashSet<>(uuids));
 		}
 		propertyCriteria.setLimit(criteria.getLimit());
-		List<Property> properties = repository.getPropertiesForBulkSearch(propertyCriteria, true);
+		List<Property> properties = null;//repository.getPropertiesForBulkSearch(propertyCriteria, true);
 		if (properties.isEmpty())
 			return Collections.emptyList();
-		Set<String> ownerIds = properties.stream().map(Property::getOwners).flatMap(List::stream)
-				.map(OwnerInfo::getUuid).collect(Collectors.toSet());
+//		Set<String> ownerIds = properties.stream().map(Property::getOwners).flatMap(List::stream)
+//				.map(OwnerInfo::getUuid).collect(Collectors.toSet());
 
 		UserSearchRequest userSearchRequest = userService.getBaseUserSearchRequest(criteria.getTenantId(), requestInfo);
-		userSearchRequest.setUuid(ownerIds);
+//		userSearchRequest.setUuid(ownerIds);
 		UserDetailResponse userDetailResponse = userService.getUser(userSearchRequest);
-		util.enrichOwner(userDetailResponse, properties, false);
+//		util.enrichOwner(userDetailResponse, properties, false);
 		return properties;
 	}
 
@@ -626,11 +626,11 @@ public class PropertyService {
 
 		for (OwnerInfo owner : owners) {
 
-			if (owner.getAlternatemobilenumber() != null) {
-				uuidToAlternateMobileNumber.put(owner.getUuid(), owner.getAlternatemobilenumber());
-			} else {
-				uuidToAlternateMobileNumber.put(owner.getUuid(), " ");
-			}
+//			if (owner.getAlternatemobilenumber() != null) {
+//				uuidToAlternateMobileNumber.put(owner.getUuid(), owner.getAlternatemobilenumber());
+//			} else {
+//				uuidToAlternateMobileNumber.put(owner.getUuid(), " ");
+//			}
 		}
 
 		notifService.sendNotificationForAlternateNumberUpdate(request, propertyFromSearch, uuidToAlternateMobileNumber);

@@ -5,6 +5,7 @@ import org.springframework.util.ObjectUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.ptr.config.PetConfiguration;
@@ -64,7 +65,9 @@ public class PetRegistrationService {
 		userService.createUser(petRegistrationRequest);
 
 		wfService.updateWorkflowStatus(petRegistrationRequest);
+//		System.out.println("----"+petRegistrationRequest);
 		petRegistrationRequest.getPetRegistrationApplications().forEach(application -> {
+<<<<<<< Updated upstream
 			if (RENEW_PET_APPLICATION.equals(application.getApplicationType())) {
 				log.debug("Pushing renewal application to Kafka - ApplicationNumber: {}, petRegistrationNumber: {}, petToken: {}", 
 					application.getApplicationNumber(), 
@@ -72,8 +75,21 @@ public class PetRegistrationService {
 					application.getPetToken());
 				producer.push(config.getRenewPtrTopic(), petRegistrationRequest);
 			} else if (NEW_PET_APPLICATION.equals(application.getApplicationType())) {
+=======
+			if(Optional.ofNullable(application.getPreviousApplicationNumber()).isPresent()) {
+				application.setApplicationType("RENEWAL");
+				producer.push(config.getRenewPtrTopic(), petRegistrationRequest);
+			}else {
+				application.setApplicationType("NEW");
+>>>>>>> Stashed changes
 				producer.push(config.getCreatePtrTopic(), petRegistrationRequest);
 			}
+//			if (application.getApplicationType().equals(RENEW_PET_APPLICATION)) {
+//				producer.push(config.getRenewPtrTopic(), petRegistrationRequest);
+//			} else if (application.getApplicationType().equals(NEW_PET_APPLICATION)) {
+//				System.out.println(petRegistrationRequest);
+//				producer.push(config.getCreatePtrTopic(), petRegistrationRequest);
+//			}
 		});
 
 		return petRegistrationRequest.getPetRegistrationApplications();

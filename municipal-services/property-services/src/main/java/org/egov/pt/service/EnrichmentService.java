@@ -170,17 +170,17 @@ public Object fetchThirdPartyIntegration(RequestInfo requestInfo, String tenantI
 				unit.setActive(true);
 			});
 		
-		property.getOwners().forEach(owner -> {
-			
-			owner.setOwnerInfoUuid(UUID.randomUUID().toString());
-			if (!CollectionUtils.isEmpty(owner.getDocuments()))
-				owner.getDocuments().forEach(doc -> {
-					doc.setId(UUID.randomUUID().toString());
-					doc.setStatus(Status.ACTIVE);
-				});
-			
-			owner.setStatus(Status.ACTIVE);
-		});
+//		property.getOwners().forEach(owner -> {
+//			
+//			owner.setOwnerInfoUuid(UUID.randomUUID().toString());
+//			if (!CollectionUtils.isEmpty(owner.getDocuments()))
+//				owner.getDocuments().forEach(doc -> {
+//					doc.setId(UUID.randomUUID().toString());
+//					doc.setStatus(Status.ACTIVE);
+//				});
+//			
+//			owner.setStatus(Status.ACTIVE);
+//		});
 	}
 
     /**
@@ -321,22 +321,22 @@ public Object fetchThirdPartyIntegration(RequestInfo requestInfo, String tenantI
 			enrichPropertyForNewWf(requestInfo, property, true);
 		}
 
-		property.getOwners().forEach(owner -> {
-
-			if (owner.getOwnerInfoUuid() == null) {
-				
-				owner.setOwnerInfoUuid(UUID.randomUUID().toString());
-				owner.setStatus(Status.ACTIVE);
-			}
-
-			if (!CollectionUtils.isEmpty(owner.getDocuments()))
-				owner.getDocuments().forEach(doc -> {
-					if (doc.getId() == null) {
-						doc.setId(UUID.randomUUID().toString());
-						doc.setStatus(Status.ACTIVE);
-					}
-				});
-		});
+//		property.getOwners().forEach(owner -> {
+//
+//			if (owner.getOwnerInfoUuid() == null) {
+//				
+//				owner.setOwnerInfoUuid(UUID.randomUUID().toString());
+//				owner.setStatus(Status.ACTIVE);
+//			}
+//
+//			if (!CollectionUtils.isEmpty(owner.getDocuments()))
+//				owner.getDocuments().forEach(doc -> {
+//					if (doc.getId() == null) {
+//						doc.setId(UUID.randomUUID().toString());
+//						doc.setStatus(Status.ACTIVE);
+//					}
+//				});
+//		});
 		 AuditDetails auditDetails = propertyutil.getAuditDetails(requestInfo.getUserInfo().getUuid().toString(), true);
 		 property.setAuditDetails(auditDetails);
 	}
@@ -390,18 +390,18 @@ public Object fetchThirdPartyIntegration(RequestInfo requestInfo, String tenantI
 				unit.setActive(true);
 			});
 		
-		property.getOwners().forEach(owner -> {
-			
-			owner.setOwnerInfoUuid(UUID.randomUUID().toString());
-			if (!CollectionUtils.isEmpty(owner.getDocuments()))
-				owner.getDocuments().forEach(doc -> {
-					doc.setId(UUID.randomUUID().toString());
-					if (null == doc.getStatus())
-						doc.setStatus(Status.ACTIVE);
-				});
-			if (null == owner.getStatus())
-				owner.setStatus(Status.ACTIVE);
-		});
+//		property.getOwners().forEach(owner -> {
+//			
+//			owner.setOwnerInfoUuid(UUID.randomUUID().toString());
+//			if (!CollectionUtils.isEmpty(owner.getDocuments()))
+//				owner.getDocuments().forEach(doc -> {
+//					doc.setId(UUID.randomUUID().toString());
+//					if (null == doc.getStatus())
+//						doc.setStatus(Status.ACTIVE);
+//				});
+//			if (null == owner.getStatus())
+//				owner.setStatus(Status.ACTIVE);
+//		});
 	}
 	
     /**
@@ -420,15 +420,15 @@ public Object fetchThirdPartyIntegration(RequestInfo requestInfo, String tenantI
                     });
 
                     // Adding creator of application
-                    if(property.getAccountId()!=null)
-                        assignes.add(OwnerInfo.builder().uuid(property.getAccountId()).build());
+//                    if(property.getAccountId()!=null)
+//                        assignes.add(OwnerInfo.builder().uuid(property.getAccountId()).build());
 
 					Set<OwnerInfo> registeredUsers = userService.getUUidFromUserName(property);
 
 					if(!CollectionUtils.isEmpty(registeredUsers))
 						assignes.addAll(registeredUsers);
 
-                    property.getWorkflow().setAssignes(assignes);
+//                    property.getWorkflow().setAssignes(assignes);
             }
     }
 

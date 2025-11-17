@@ -8,6 +8,7 @@ public class PTConstants {
 
     private PTConstants() {}
 
+    public static final String MDMS_RL_MOD_NAME = "rentAndLease";
 
     public static final String PT_TYPE_VACANT = "VACANT";
     

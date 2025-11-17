@@ -254,9 +254,9 @@ public class PTRConstants {
 
 	public static final String ACTION_PAY = "PAY";
 
-	public static final String NEW_PET_APPLICATION = "NEWAPPLICATION";
+	public static final String NEW_PET_APPLICATION = "NEW";
 
-	public static final String RENEW_PET_APPLICATION = "RENEWAPPLICATION";
+	public static final String RENEW_PET_APPLICATION = "RENEWAL";
 
 	public static final String PET_REGISTRATION_FEE = "PET_REGISTRATION_FEE";
 

@@ -300,19 +300,19 @@ public class PropertyMigrationValidator {
 		Property property = request.getProperty();
 		List<OwnerInfo> owners = property.getOwners();
 		
-		if (!property.getOwnershipCategory().contains("INSTITUTIONAL")) {
-
-			owners.forEach(owner -> {
-				if (!isMobileNumberValid(owner.getMobileNumber()))
-					errorMap.put("INVALID OWNER", "MobileNumber is not valid for user : " + property.getPropertyId());
-			});
-		} else {
-			owners.forEach(owner -> {
-				if (owner.getAltContactNumber() == null)
-					errorMap.put("INVALID OWNER",
-							" Alternate ContactNumber cannot be null for institution : " + owner.getName());
-			});
-		}
+//		if (!property.getOwnershipCategory().contains("INSTITUTIONAL")) {
+//
+//			owners.forEach(owner -> {
+//				if (!isMobileNumberValid(owner.getMobileNumber()))
+//					errorMap.put("INVALID OWNER", "MobileNumber is not valid for user : " + property.getPropertyId());
+//			});
+//		} else {
+//			owners.forEach(owner -> {
+//				if (owner.getAltContactNumber() == null)
+//					errorMap.put("INVALID OWNER",
+//							" Alternate ContactNumber cannot be null for institution : " + owner.getName());
+//			});
+//		}
 
 //		if (!errorMap.isEmpty())
 //			throw new CustomException(errorMap);

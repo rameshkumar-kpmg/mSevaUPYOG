@@ -420,7 +420,7 @@ public class NotificationUtil {
            try
            {
                OwnerInfo user= (OwnerInfo) userDetailResponse.getUser().get(0);
-               mapOfPhnoAndUUIDs.put(user.getMobileNumber(),user.getUuid());
+//               mapOfPhnoAndUUIDs.put(user.getMobileNumber(),user.getUuid());
            }
            catch(Exception e) {
                log.error("Exception while fetching user object: ",e);

@@ -83,6 +83,13 @@ public class PropertyConfiguration {
     @Value("${egov.idgen.path}")
     private String idGenPath;
     
+    @Value("${egov.idgen.applicationnumber.name}")
+    private String allotmentApplicationNummberGenName;
+
+    @Value("${egov.idgen.applicationnumber.format}")
+    private String allotmentApplicationNummberGenNameFormat;
+
+    
     @Value("${egov.idgen.ack.name}")
     private String ackIdGenName;
 
@@ -153,7 +160,14 @@ public class PropertyConfiguration {
     @Value("${egov.usr.events.download.receipt.link}")
     private String userEventReceiptDownloadLink;
     
-    //Property Search Params
+    //Property Search Params // allotment
+    
+    @Value("${save.tl.allotment}")
+    private String saveRLAllotmentTopic;
+    
+    @Value("${update.tl.allotment}")
+    private String updateRLAllotmentTopic;
+    
     @Value("${citizen.allowed.search.params}")
     private String citizenSearchParams;
 

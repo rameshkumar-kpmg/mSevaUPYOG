@@ -62,7 +62,7 @@ public class CommonUtils {
         Long time = System.currentTimeMillis();
         
         if(isCreate)
-            return AuditDetails.builder().createdBy(by).lastModifiedBy(by).createdTime(time).lastModifiedTime(time).build();
+            return AuditDetails.builder().createdBy(by).createdTime(time).build();
         else
             return AuditDetails.builder().lastModifiedBy(by).lastModifiedTime(time).build();
     }
@@ -76,7 +76,7 @@ public class CommonUtils {
 
 		List<OwnerInfo> users = new LinkedList<>();
 		users.addAll(property.getOwners());
-		users.add(OwnerInfo.builder().uuid(property.getAccountId()).build());
+//		users.add(OwnerInfo.builder().uuid(property.getAccountId()).build());
 		return users;
 	}
 	
@@ -100,6 +100,8 @@ public class CommonUtils {
 
 		IdGenerationRequest request = IdGenerationRequest.builder().idRequests(reqList).requestInfo(requestInfo).build();
 		StringBuilder uri = new StringBuilder(configs.getIdGenHost()).append(configs.getIdGenPath());
+		System.out.println("---------------"+uri);
+		System.out.println("---------------"+request);
 		IdGenerationResponse response = mapper.convertValue(restRepo.fetchResult(uri, request).get(), IdGenerationResponse.class);
 		
 		List<IdResponse> idResponses = response.getIdResponses();

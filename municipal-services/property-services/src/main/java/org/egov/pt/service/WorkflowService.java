@@ -1,12 +1,11 @@
 package org.egov.pt.service;
 
-import java.util.HashMap;
 import java.util.Optional;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.pt.config.PropertyConfiguration;
-import org.egov.pt.models.Assessment;
-import org.egov.pt.models.Property;
+import org.egov.pt.models.AllotmentDetails;
+import org.egov.pt.models.AllotmentRequest;
 import org.egov.pt.models.enums.CreationReason;
 import org.egov.pt.models.enums.Status;
 import org.egov.pt.models.workflow.BusinessService;
@@ -16,7 +15,6 @@ import org.egov.pt.models.workflow.ProcessInstanceResponse;
 import org.egov.pt.models.workflow.State;
 import org.egov.pt.repository.ServiceRequestRepository;
 import org.egov.pt.util.PropertyUtil;
-import org.egov.pt.web.contracts.PropertyRequest;
 import org.egov.pt.web.contracts.RequestInfoWrapper;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,55 +106,55 @@ public class WorkflowService {
 	 * 
 	 * @param request
 	 */
-	public State updateWorkflow(PropertyRequest request, CreationReason creationReasonForWorkflow) {
-
-		Property property = request.getProperty();
-		JsonNode jsonNode = request.getProperty().getAdditionalDetails();
-
-		// Initialize the variable to hold the propertytobestatus value
-		String propertyToBeStatus = null;
-
-		// Check if jsonNode is not null and retrieve the value
-		if (jsonNode != null && jsonNode.has("propertytobestatus")) {
-			JsonNode propertyToBeStatusNode = jsonNode.get("propertytobestatus");
-			if (propertyToBeStatusNode != null && !propertyToBeStatusNode.isNull()) {
-				propertyToBeStatus = propertyToBeStatusNode.asText();
-			}
-		}
-		ProcessInstanceRequest workflowReq = utils.getWfForPropertyRegistry(request, creationReasonForWorkflow);
-		State state = callWorkFlow(workflowReq);
-
-		if (state.getApplicationStatus().equalsIgnoreCase(configs.getWfStatusActive())
-				&& property.getPropertyId() == null) {
-
-			String pId = utils.getIdList(request.getRequestInfo(), property.getTenantId(),
-					configs.getPropertyIdGenName(), configs.getPropertyIdGenFormat(), 1).get(0);
-			request.getProperty().setPropertyId(pId);
-		}
-
-		if (request.getProperty().getCreationReason().equals(CreationReason.STATUS)
-				&& request.getProperty().getWorkflow().getAction().equalsIgnoreCase("APPROVE")) {
-
-			if (propertyToBeStatus.equalsIgnoreCase("INACTIVE")) {
-				request.getProperty().setStatus(Status.INACTIVE);
-			} else if (propertyToBeStatus.equalsIgnoreCase("ACTIVE")) {
-				request.getProperty().setStatus(Status.ACTIVE);
-			}
-			//request.getProperty().setCreationReason(CreationReason.UPDATE);
-			
-		}
-		else
-			request.getProperty().setStatus(Status.fromValue(state.getApplicationStatus()));
-		if (request.getProperty().getCreationReason().equals(CreationReason.CREATE)
-				&&( request.getProperty().getWorkflow().getAction().equalsIgnoreCase("APPROVE")|| 
-						 request.getProperty().getWorkflow().getAction().equalsIgnoreCase("REJECT"))
-				) {
-			request.getProperty().setCreationReason(CreationReason.UPDATE);
-		}
-		
-		request.getProperty().getWorkflow().setState(state);
-		return state;
-	}
+//	public State updateWorkflow(AllotmentRequest allotmentRequest, CreationReason creationReasonForWorkflow) {
+//
+//		AllotmentDetails allotmentDetails=allotmentRequest.getAllotment();
+//		JsonNode jsonNode = allotmentDetails.getAdditionalDetails();
+//
+//		// Initialize the variable to hold the propertytobestatus value
+//		String propertyToBeStatus = null;
+//
+//		// Check if jsonNode is not null and retrieve the value
+//		if (jsonNode != null && jsonNode.has("propertytobestatus")) {
+//			JsonNode propertyToBeStatusNode = jsonNode.get("propertytobestatus");
+//			if (propertyToBeStatusNode != null && !propertyToBeStatusNode.isNull()) {
+//				propertyToBeStatus = propertyToBeStatusNode.asText();
+//			}
+//		}
+//		ProcessInstanceRequest workflowReq = utils.getWfForPropertyRegistry(allotmentRequest, creationReasonForWorkflow);
+//		State state = callWorkFlow(workflowReq);
+//
+//		if (state.getApplicationStatus().equalsIgnoreCase(configs.getWfStatusActive())
+//				&& allotmentDetails.getId() == null) {
+//
+//			String pId = utils.getIdList(allotmentRequest.getRequestInfo(), allotmentDetails.getTenantId(),
+//					configs.getPropertyIdGenName(), configs.getPropertyIdGenFormat(), 1).get(0);
+//			allotmentDetails.setId(pId);
+//		}
+//
+//		if (allotmentDetails.getCreationReason().equals(CreationReason.STATUS)
+//				&& allotmentRequest.getAllotment().getWorkflow().getAction().equalsIgnoreCase("APPROVE")) {
+//
+//			if (propertyToBeStatus.equalsIgnoreCase("INACTIVE")) {
+//				allotmentRequest.getAllotment().setStatus(Status.INACTIVE);
+//			} else if (propertyToBeStatus.equalsIgnoreCase("ACTIVE")) {
+//				allotmentRequest.getAllotment().setStatus(Status.ACTIVE);
+//			}
+//			//request.getProperty().setCreationReason(CreationReason.UPDATE);
+//			
+//		}
+//		else
+//		  allotmentRequest.getAllotment().setStatus(Status.fromValue(state.getApplicationStatus()));
+////		if (allotmentRequest.getAllotment().getCreationReason().equals(CreationReason.CREATE)
+////				&&(allotmentRequest.getAllotment().getWorkflow().getAction().equalsIgnoreCase("APPROVE")|| 
+////						allotmentRequest.getAllotment().getWorkflow().getAction().equalsIgnoreCase("REJECT"))
+////				) {
+////			allotmentRequest.getAllotment().setCreationReason(CreationReason.UPDATE);
+////		}
+//		
+//		allotmentRequest.getAllotment().getWorkflow().setState(state);
+//		return state;
+//	}
 
 	/**
 	 * Returns boolean value to specifying if the state is updatable

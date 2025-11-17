@@ -133,12 +133,12 @@ public class PaymentNotificationService {
 
 
             Set<String> mobileNumbers = new HashSet<>();
-            property.getOwners().forEach(owner -> {
-                mobileNumbers.add(owner.getMobileNumber());
-                if (owner.getAlternatemobilenumber()!= null) {
-                    mobileNumbers.add(owner.getAlternatemobilenumber());
-                }
-            });
+//            property.getOwners().forEach(owner -> {
+//                mobileNumbers.add(owner.getMobileNumber());
+//                if (owner.getAlternatemobilenumber()!= null) {
+//                    mobileNumbers.add(owner.getAlternatemobilenumber());
+//                }
+//            });
 
             List<SMSRequest> smsRequests = getSMSRequests(mobileNumbers, customMessage, valMap);
             String payerMobileNo = transaction.getUser().getMobileNumber();
@@ -241,12 +241,12 @@ public class PaymentNotificationService {
             Map<String, String> valMap = getValuesFromPayment(transactionNumber, paymentMode, paymentDetail);
             customMessage = getCustomizedMessage(valMap,messageTemplate,path);
 
-            property.getOwners().forEach(owner -> {
-                mobileNumbers.add(owner.getMobileNumber());
-                if (owner.getAlternatemobilenumber()!= null) {
-                    mobileNumbers.add(owner.getAlternatemobilenumber());
-                }
-            });
+//            property.getOwners().forEach(owner -> {
+//                mobileNumbers.add(owner.getMobileNumber());
+//                if (owner.getAlternatemobilenumber()!= null) {
+//                    mobileNumbers.add(owner.getAlternatemobilenumber());
+//                }
+//            });
 
             smsRequests.addAll(getSMSRequests(mobileNumbers,customMessage, valMap));
             String payerMobileNo = paymentRequest.getPayment().getMobileNumber();

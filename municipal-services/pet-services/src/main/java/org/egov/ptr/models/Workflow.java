@@ -26,6 +26,7 @@ import lombok.Builder;
 @NoArgsConstructor
 @Builder
 public class Workflow {
+	
 	@JsonProperty("action")
 	private String action = null;
 

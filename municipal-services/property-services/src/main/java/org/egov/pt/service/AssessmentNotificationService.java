@@ -150,14 +150,14 @@ public class AssessmentNotificationService {
 		}
 
 		Map<String, String> mobileNumberToOwner = new HashMap<>();
-		property.getOwners().forEach(owner -> {
-			if (owner.getMobileNumber() != null)
-				mobileNumberToOwner.put(owner.getMobileNumber(), owner.getName());
-			if (owner.getAlternatemobilenumber() != null
-					&& !owner.getAlternatemobilenumber().equalsIgnoreCase(owner.getMobileNumber())) {
-				mobileNumberToOwner.put(owner.getAlternatemobilenumber(), owner.getName());
-			}
-		});
+//		property.getOwners().forEach(owner -> {
+//			if (owner.getMobileNumber() != null)
+//				mobileNumberToOwner.put(owner.getMobileNumber(), owner.getName());
+//			if (owner.getAlternatemobilenumber() != null
+//					&& !owner.getAlternatemobilenumber().equalsIgnoreCase(owner.getMobileNumber())) {
+//				mobileNumberToOwner.put(owner.getAlternatemobilenumber(), owner.getName());
+//			}
+//		});
 
 		List<SMSRequest> smsRequestsForDues = util.createSMSRequest(messageTemplate, mobileNumberToOwner);
 
@@ -180,14 +180,14 @@ public class AssessmentNotificationService {
 			return Collections.emptyList();
 
 		Map<String, String> mobileNumberToOwner = new HashMap<>();
-		property.getOwners().forEach(owner -> {
-			if (owner.getMobileNumber() != null && owner.getStatus().toString().equalsIgnoreCase("ACTIVE"))
-				mobileNumberToOwner.put(owner.getMobileNumber(), owner.getName());
-			if (owner.getAlternatemobilenumber() != null
-					&& !owner.getAlternatemobilenumber().equalsIgnoreCase(owner.getMobileNumber())) {
-				mobileNumberToOwner.put(owner.getAlternatemobilenumber(), owner.getName());
-			}
-		});
+//		property.getOwners().forEach(owner -> {
+//			if (owner.getMobileNumber() != null && owner.getStatus().toString().equalsIgnoreCase("ACTIVE"))
+//				mobileNumberToOwner.put(owner.getMobileNumber(), owner.getName());
+//			if (owner.getAlternatemobilenumber() != null
+//					&& !owner.getAlternatemobilenumber().equalsIgnoreCase(owner.getMobileNumber())) {
+//				mobileNumberToOwner.put(owner.getAlternatemobilenumber(), owner.getName());
+//			}
+//		});
 		return util.createSMSRequest(message, mobileNumberToOwner);
 	}
 

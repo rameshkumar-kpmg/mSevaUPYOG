@@ -36,9 +36,9 @@ public class PetRegistrationRequest {
 
 	@JsonProperty("RequestInfo")
 	private RequestInfo requestInfo;
+	
 
 	@JsonProperty("PetRegistrationApplications")
-
 	@Valid
 	private List<PetRegistrationApplication> petRegistrationApplications = null;
 

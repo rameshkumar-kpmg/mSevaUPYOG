@@ -133,7 +133,7 @@ public class AssessmentEnrichmentService {
 
            List<OwnerInfo> owners = assessmentUtils.getUserForWorkflow(property);
 
-           request.getAssessment().getWorkflow().setAssignes(owners);
+//           request.getAssessment().getWorkflow().setAssignes(owners);
         }
 
         State state = workflowService.getCurrentState(request.getRequestInfo(), assessment.getTenantId(), assessment.getAssessmentNumber());
